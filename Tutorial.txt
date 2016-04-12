@@ -1,0 +1,138 @@
+Criar um Projeto Web - Dynamic Web Project
+
+Name - CartaoWebService - 
+Dynamic web module version - 3.0
+
+
+Ciar uma classe Cartao - package com.exemplo.ws
+
+package com.exemplo.ws;
+
+import javax.jws.WebMethod;
+import javax.jws.WebService;
+
+@WebService
+public class Cartao {
+
+	@WebMethod
+	public String validarCartao(String numero) {
+		if (numero.length() == 16) {
+			return "Cartão válido - " + numero;
+		} else {
+			return "Cartão Inválido";
+		}
+	}
+	
+}
+
+@WebService - anotação para o webservice funcionar
+
+@WebMethod - expondo o método como serviço
+
+Botão direito em cima da classe, acesse WebServices
+-> Create WebService
+-> Marcar duas opções:
+	-> Publish the web service
+	-> Monitor the web service 
+	-> Avança até o final
+	-> Olhar o arquivo Cartao.wsdl gerado 
+	
+	Wsdl - é um padrão universal que defini seu serviço
+	indenpendente de como ele será acessado
+	
+	
+	
+Iremos criar nosso cliente 	
+	
+Criar um Projeto Web - Dynamic Web Project
+
+Name - CartaoWebServiceClient 
+Dynamic web module version - 3.0
+
+Botão direito em cima do projeto CartaoWebServiceClient
+	-> New
+	-> Other
+	-> WebSevicesClient
+	-> Next
+	-> Service definichao
+	-> Browser
+	-> e achar o Cartao.wsdl
+	-> Avançar e Finalizar
+	
+Com base no Arquivo Cartao.wsdl, o eclipse criou 
+vários arquivos automaticamente
+
+Criar um Sevlet
+
+Name - ServletCartao
+package - br.exemplo.servlet
+	
+	-> Next
+	-> Em Url Mappings - editar o mapeamento para cartão
+
+
+
+	
+package br.exemplo.servlet;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.exemplo.ws.Cartao;
+import com.exemplo.ws.CartaoProxy;
+
+/**
+ * Servlet implementation class ServletCartao
+ */
+@WebServlet("/cartao")
+public class ServletCartao extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public ServletCartao() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		PrintWriter out = response.getWriter();
+		
+		Cartao cartao = new CartaoProxy();
+		out.println("Resposta do serviço: " + cartao.validarCartao("123456789000000"));
+		
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doGet(request, response);
+	}
+
+}
+
+
+
+
+Colocar o projeto CartaoWebService no tomcat e executar
+o Servlet do projeto CartaoWebServiceClient
+	
+Você pode realizar várias operações com WebService.
+
+WebServices possui várias tecnologias para os desenvolvedores.
+
+Fim
